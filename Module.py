@@ -6,11 +6,12 @@ class Module(BaseModule):
     current = {}
     wait_in_current = 30
 
-    def motion_detection_event(self, *args, **kwargs):
-        info = kwargs.get('device', {}).get('name', 'UNKNOWN')
+    def motion_detection_event(self, event):
+        info = getattr(event.kwargs.get('device', None), 'name', 'UNKNOWN')
+        image = event.kwargs.get('new', None)
 
         if info not in self.current:
-            self.notify(self._('Motion detection on %s.') % info)
+            self.notify(self._('Motion detection on %s.') % info, image=image)
 
         self.current[info] = time.time()
 
